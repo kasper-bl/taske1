@@ -79,16 +79,18 @@ Vue.component('product', {
         }
     },
     methods: {
+
         addToCart() {
-           this.$emit('add-to-cart');
+           this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId);
         },
         updateProduct(index) {
            this.selectedVariant = index;
            console.log(index);
         },
         deleteToCart(){
-            this.cart -= 1
-        }
+            this.$emit('delete-to-cart', this.variants[this.selectedVariant].variantId);
+        },
+
     },
     computed: {
         title() {
@@ -134,9 +136,20 @@ Vue.component('product-details', {
 })
 
 let app = new Vue({
-   el: '#app',
-   data: {
-       premium: true,
-       cart: 0
+    el: '#app',
+    data: {
+        premium: true,
+        cart: []
+    },
+    methods: {
+        updateCart(id) {
+            this.cart.push(id);
+        },
+        deleteCart(id) {
+            const index = this.cart.indexOf(id);
+            if(index !== -1){
+                this.cart.splice(index, 1)
+            }
+        }
    }
 })
