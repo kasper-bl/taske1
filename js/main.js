@@ -96,7 +96,6 @@ Vue.component('product', {
                 this.reviews = [];
             }
         }
-
         eventBus.$on('review-submitted', productReview => {
             this.reviews.push(productReview);
             localStorage.setItem('productReviews', JSON.stringify(this.reviews));
