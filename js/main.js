@@ -1,4 +1,4 @@
-const eventBus = new Vue();
+let eventBus = new Vue();
 
 Vue.component('product', {
     template:`
