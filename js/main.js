@@ -1,4 +1,4 @@
-const eventBus = new Vue();
+let eventBus = new Vue();
 
 Vue.component('product', {
     template:`
@@ -76,7 +76,6 @@ Vue.component('product', {
         }
     },
     methods: {
-
         addToCart() {
            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId);
         },
@@ -89,9 +88,19 @@ Vue.component('product', {
         },
     },
     mounted() {
+        const savedReviews = localStorage.getItem('productReviews');
+        if(savedReviews){
+            try{
+                this.reviews = JSON.parse(savedReviews);
+            } catch(e){
+                this.reviews = [];
+            }
+        }
+
         eventBus.$on('review-submitted', productReview => {
-            this.reviews.push(productReview)
-        })
+            this.reviews.push(productReview);
+            localStorage.setItem('productReviews', JSON.stringify(this.reviews));
+        });
     },
     computed: {
         title() {
@@ -232,6 +241,7 @@ Vue.component('product-tabs', {
                         <p>{{ review.name }}</p>
                         <p>Rating: {{ review.rating }}</p>
                         <p>{{ review.review }}</p>
+                        <p>Recommend: {{ review.recommend }}</p>
                     </li>
                 </ul>
             </div>
@@ -289,7 +299,7 @@ Vue.component('product-tabs', {
 let app = new Vue({
     el: '#app',
     data: {
-        premium: true,
+        premium: false,
         cart: []
     },
     methods: {
